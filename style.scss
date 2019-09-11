@@ -1,0 +1,68 @@
+$font-family: Arial, sans-serif;
+$font-size: 30px;
+$grid-gap: 1px;
+$cell-border: 1px solid black;
+$cell-width: 100px;
+$cell-height: 100px;
+$cell-color: #eee;
+$hover-color: pink;
+$hover-rize: -20px;
+$week-days: ('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun');
+
+
+
+@mixin reset {
+  margin: 0;
+  padding: 0;
+}
+
+@mixin centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  @include reset;
+  @include centered;
+  font-family: $font-family;
+  font-size: $font-size;
+}
+
+.calendar {
+  display: grid;
+  grid-gap: $grid-gap;
+  grid-template-columns: repeat(7, $cell-height);
+  grid-template-rows: repeat(6, $cell-width);
+  div {
+    box-sizing: border-box;
+    background-color: $cell-color;
+    @include centered;
+    border: $cell-border;
+    transition: 0.2s;
+    &:hover {
+      transform: translate(0, $hover-rize);
+      background-color: $hover-color;
+      cursor: pointer;
+    }
+  }
+  @for $i from 1 through 31 {
+    div:nth-child(#{$i})::after {
+      content: '#{$i}';
+    } 
+  }
+  @each $week-day in $week-days {
+    &-#{$week-day} div:first-child {
+      grid-column-start: index($week-days, $week-day);
+    }
+  }
+  @for $i from 28 through 30 {
+    &-#{$i} {
+      @for $j from $i+1 through 31 {
+        & div:nth-child(#{$j}) {
+          display: none;
+        }
+      }
+    } 
+  }
+}
